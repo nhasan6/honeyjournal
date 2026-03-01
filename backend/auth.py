@@ -6,7 +6,7 @@ from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 import os
-from utils import verify_password
+from utils import verify_password, get_password_hash
 
 load_dotenv()
 
@@ -50,4 +50,3 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     
     return username
-   
