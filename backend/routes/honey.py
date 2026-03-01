@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Response, HTTPException
+from fastapi import APIRouter, Response, HTTPException, Depends
 from database import supabase
 from models import HoneyCreate, HoneyUpdate
+from auth import get_current_user
 
 router = APIRouter(
     prefix="/honey",
@@ -23,13 +24,13 @@ def get_honey(id: int):
     return content.data[0] # default return type of content.data is a list, this ensures we are getting the 1st entry
 
 @router.post("/", status_code=201)
-def create_honey(honey: HoneyCreate):
+def create_honey(honey: HoneyCreate, current_user: str = Depends(get_current_user)):
     # call external api to update longitude and latitude coordinates
     content = supabase.table("honeys").insert(honey.model_dump()).execute()
     return content.data
 
 @router.delete('/{id}')
-def delete_honey(id: int):
+def delete_honey(id: int, current_user: str = Depends(get_current_user)):
     content = supabase.table("honeys").delete().eq("id", id).execute()
     if not content.data:
         raise HTTPException(
@@ -39,7 +40,7 @@ def delete_honey(id: int):
     return Response(status_code=204)
 
 @router.put('/{id}')
-def update_honey(id: int, honey: HoneyUpdate):
+def update_honey(id: int, honey: HoneyUpdate, current_user: str = Depends(get_current_user)):
     content = supabase.table("honeys").update(honey.model_dump(exclude_none=True)).eq("id", id).execute()
     if not content.data:
         raise HTTPException(
