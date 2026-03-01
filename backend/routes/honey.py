@@ -47,26 +47,3 @@ def update_honey(id: int, honey: HoneyUpdate):
             detail="Honey record not found."
         )
     return content.data
-
-
-    
-
-
-
-
-
-
-
-
-
-
-so i need functions to:
-- get a specific honey
-- get all honeys
-
-auth
-- edit a honey
--delete a honey
-- view a honey
-- add a honey
-- see all honeys 
